@@ -1,7 +1,7 @@
 Summary:	Tools to create/check Apple HFS+ filesystems
 Name:		hfsplus-tools
 Version:	540.1.linux3
-Release:	0.1
+Release:	1
 License:	APSL 2.0
 Group:		Base
 Source0:	http://cavan.codon.org.uk/~mjg59/diskdev_cmds/diskdev_cmds-%{version}.tar.gz
