@@ -1,4 +1,5 @@
 Summary:	Tools to create/check Apple HFS+ filesystems
+Summary(pl.UTF-8):	Narzędzia do tworzenia i sprawdzania systemów plików Apple HFS+
 Name:		hfsplus-tools
 Version:	540.1.linux3
 Release:	1
@@ -7,6 +8,7 @@ Group:		Base
 Source0:	http://cavan.codon.org.uk/~mjg59/diskdev_cmds/diskdev_cmds-%{version}.tar.gz
 # Source0-md5:	0435afc389b919027b69616ad1b05709
 URL:		http://gentoo-wiki.com/HOWTO_hfsplus
+# note: it uses Clang "Blocks" extension
 BuildRequires:	clang
 BuildRequires:	libuuid-devel
 BuildRequires:	openssl-devel
@@ -36,6 +38,24 @@ a hfsplus partition is recommended only after disabling journaling;
 however, the kernel, as of version 2.6.16, supports case-sensitivity
 (also known as HFSX) commit.
 
+%description -l pl.UTF-8
+HFS+, HFS Plus lub Mac OS Extended to nazwy sytemu plików stworzonego
+przez Apple Computer w celu zastąpienia oryginalnego systemu plików
+HFS (Hierarchical File System). Poza tym, że jest to domyślny system
+plików we współczesnych komputerach firmy Apple, HFS+ jest jednym z
+dwóch formatów (drugim jest FAT) obsługiwanych przez odtwarzacze iPod.
+W przeciwieństwie do FAT-u HFS+ obsługuje uniksowe uprawnienia plików,
+co czyni go przydatnym do serwowania i współdzielenia plików w
+bezpieczny sposób. Ponieważ urządzenia firmy Apple Computer stają się
+coraz bardziej wszechobecne, coraz ważniejsze jest, żeby Linux
+obsługiwał w pełni ten format. Niniejszy pakiet zawiera narzędzia do
+tworzenia i sprawdzania systemów plików HFS+ pod Linuksem.
+
+Jądro Linuksa nie obsługuje zapisu do kronik HFS+, a zapis na partycję
+HFS+ zalecany jest tylko po wyłączeniu kroniki; jednak jądro w wersji
+2.6.16 obsługuje wariant z rozróżnianiem wielkość liter (znany jako
+HFSX).
+
 %prep
 %setup -q -n diskdev_cmds-%{version}
 
@@ -43,8 +63,10 @@ however, the kernel, as of version 2.6.16, supports case-sensitivity
 find -type f -name '*.[ch]' -exec chmod -c a-x {} +
 
 %build
-export CFLAGS="%{rpmcflags}"
-%{__make}
+# note: keep CC=clang, not %{__cc}
+%{__make} \
+	CFLAGS="%{rpmcflags} -fblocks -Wall -I$(pwd)/BlocksRunTime -I$(pwd)/include -DDEBUG_BUILD=0 -D_FILE_OFFSET_BITS=64 -DLINUX=1 -DBSD=1 -DVERSION=\\\"%{version}\\\"" \
+	LDFLAGS="%{rpmldflags} -L$(pwd)/BlocksRunTime"
 
 %install
 rm -rf $RPM_BUILD_ROOT
