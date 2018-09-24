@@ -2,7 +2,7 @@ Summary:	Tools to create/check Apple HFS+ filesystems
 Summary(pl.UTF-8):	Narzędzia do tworzenia i sprawdzania systemów plików Apple HFS+
 Name:		hfsplus-tools
 Version:	540.1.linux3
-Release:	2
+Release:	3
 License:	APSL 2.0
 Group:		Base
 Source0:	http://cavan.codon.org.uk/~mjg59/diskdev_cmds/diskdev_cmds-%{version}.tar.gz
@@ -20,6 +20,9 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # we want this to end up with the other mkfs.*'s, in /sbin
 %define		_exec_prefix	/
+
+# clang-6.0: error: unknown argument: '-fvar-tracking-assignments'
+%define		filterout	-fvar-tracking-assignments
 
 %description
 HFS+, HFS Plus, or Mac OS Extended are names for a file system
