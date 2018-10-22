@@ -7,6 +7,7 @@ License:	APSL 2.0
 Group:		Base
 Source0:	http://cavan.codon.org.uk/~mjg59/diskdev_cmds/diskdev_cmds-%{version}.tar.gz
 # Source0-md5:	0435afc389b919027b69616ad1b05709
+Patch0:		x32.patch
 URL:		http://gentoo-wiki.com/HOWTO_hfsplus
 # note: it uses Clang "Blocks" extension
 BuildRequires:	clang
@@ -61,14 +62,18 @@ HFSX).
 
 %prep
 %setup -q -n diskdev_cmds-%{version}
+%patch0 -p1
 
 # remove errant execute bits
 find -type f -name '*.[ch]' -exec chmod -c a-x {} +
 
 %build
+%ifarch x32
+march="-mx32"
+%endif
 # note: keep CC=clang, not %{__cc}
 %{__make} \
-	CFLAGS="%{rpmcflags} -fblocks -Wall -I$(pwd)/BlocksRunTime -I$(pwd)/include -DDEBUG_BUILD=0 -D_FILE_OFFSET_BITS=64 -DLINUX=1 -DBSD=1 -DVERSION=\\\"%{version}\\\"" \
+	CFLAGS="%{rpmcflags} -fblocks $march -Wall -I$(pwd)/BlocksRunTime -I$(pwd)/include -DDEBUG_BUILD=0 -D_FILE_OFFSET_BITS=64 -DLINUX=1 -DBSD=1 -DVERSION=\\\"%{version}\\\"" \
 	LDFLAGS="%{rpmldflags} -L$(pwd)/BlocksRunTime"
 
 %install
