@@ -2,12 +2,12 @@ Summary:	Tools to create/check Apple HFS+ filesystems
 Summary(pl.UTF-8):	Narzędzia do tworzenia i sprawdzania systemów plików Apple HFS+
 Name:		hfsplus-tools
 Version:	540.1.linux3
-Release:	4
+Release:	5
 License:	APSL 2.0
 Group:		Base
 Source0:	http://cavan.codon.org.uk/~mjg59/diskdev_cmds/diskdev_cmds-%{version}.tar.gz
 # Source0-md5:	0435afc389b919027b69616ad1b05709
-Patch0:		x32.patch
+Patch0:		glibc-2.34.patch
 URL:		http://gentoo-wiki.com/HOWTO_hfsplus
 # note: it uses Clang "Blocks" extension
 BuildRequires:	clang
